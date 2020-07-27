@@ -100,6 +100,7 @@ function importExcute() {
 									</div>
 								</div>
 								@include('_componen.dtable_action', ['button_action'=>$compact['button_action']])
+								<div id="responseImport"></div>
 								@include('_componen.dtable', ['table_config'=>$compact['table_config']])
 							</div>
 							<div class="tab-pane fade" id="custom-tabs-two" role="tabpanel" aria-labelledby="custom-tabs-two-tab">

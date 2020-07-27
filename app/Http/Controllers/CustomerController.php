@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
 use App\Models\Config;
 use App\Models\MasterWebsite;
 use App\Models\MasterBank;
 use App\Models\MasterTier;
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Carbon\Carbon;
 use DataTables;
 use Validator;
@@ -91,26 +94,7 @@ class CustomerController extends Controller
     	}
     	$Config = $this->getConfig();
     	$Model = "App\Models\\".$Config['models'];
-    	if (isset($Request->id)){
-    		$store = $Model::find($Request->id);
-
-    	}else{
-    		$store = new $Model;
-    	}
-    	$store->username = $Request->username;
-    	$store->name = $Request->name;
-    	$store->alamat = $Request->alamat;
-    	$store->no_hp = $Request->no_hp;
-    	$store->no_rekening = $Request->no_rekening;
-    	$store->atas_nama_rekening = $Request->atas_nama_rekening;
-    	$store->website_id = $Request->website_id;
-    	$store->bank_id = $Request->bank_id;
-    	$store->tier_id = $Request->tier_id;
-    	$store->save();
-    	if (!isset($Request->id)){
-	    	$store->code = $store->code.$store->id;
-	        $store->save();
-    	}
+    	$store = $this->storeExecute($Model, $Request);
     	return [
     		'pnotify' => true,
     		'pnotify_type' => 'success',
@@ -122,7 +106,28 @@ class CustomerController extends Controller
     	];
     }
 
+    private function storeExecute($Model, $object){
+        if (isset($Request->id)){
+            $store = $Model::find($Request->id);
+
+        }else{
+            $store = new $Model;
+        }
+        $store->username = $object->username;
+        $store->name = $object->name;
+        $store->alamat = $object->alamat;
+        $store->no_hp = $object->no_hp;
+        $store->no_rekening = $object->no_rekening;
+        $store->atas_nama_rekening = $object->atas_nama_rekening;
+        $store->website_id = $object->website_id;
+        $store->bank_id = $object->bank_id;
+        $store->tier_id = $object->tier_id;
+        $store->save();
+        return $store;
+    }
+
     public function import(Request $Request){
+        $Config = $this->getConfig();
         $file         = Carbon::now()->format('Ymd_h_i_s').'_'.Str::random(4);
         $file_dir     = 'assets/file/import/'.$file.'_import.xlsx';
         try {
@@ -131,6 +136,110 @@ class CustomerController extends Controller
         } catch (Exception $e) {
             $response = $e->getMessage();
         }
-        return $response;
+        $objPHPExcel = IOFactory::load($file_dir);
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        $highestColumn++;
+        $header = [];
+        for ($column = 'A'; $column != $highestColumn; $column++) {
+            $cell = $sheet->getCell($column.'1')->getValue();
+            $header[] = $cell;
+        }
+        unlink($file_dir);
+        if ($Config['import_header_validat'] !== $header) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Sorry, this not correct document'
+            ];
+        }
+        $write_arr = [];
+        $done = [];
+        $fail = [];
+        for ($row = 2; $row <= $highestRow; $row++){
+            $write_arr[] = [
+                "username" => $sheet->getCell('A'.$row)->getValue(),
+                "name" => $sheet->getCell('B'.$row)->getValue(),
+                "alamat" => $sheet->getCell('C'.$row)->getValue(),
+                "no_hp" => $sheet->getCell('D'.$row)->getValue(),
+                "no_rekening" => $sheet->getCell('E'.$row)->getValue(),
+                "atas_nama_rekening" => $sheet->getCell('F'.$row)->getValue(),
+                "website_code" => $sheet->getCell('G'.$row)->getValue(),
+                "bank_code" => $sheet->getCell('H'.$row)->getValue(),
+                "tier" => $sheet->getCell('I'.$row)->getValue()
+            ];
+        }
+        $Model = "App\Models\\".$Config['models'];
+        foreach ($write_arr as $arr) {
+            $get_import_id = $this->get_import_id($arr);
+            if ($get_import_id['status'] == true) {
+                $arr['website_id'] = $get_import_id['website_id'];
+                $arr['bank_id'] = $get_import_id['bank_id'];
+                $arr['tier_id'] = $get_import_id['tier_id'];
+                $done[] = $arr;
+                $object = (object)$arr;
+                $this->storeExecute($Model, $object);
+            }else{
+                $arr['msg'] = $get_import_id['msg'];
+                $fail[] = $arr;
+            }
+        }
+        $render = view('_componen.customer_import_response_info', compact('done','fail'))->render();
+        return [
+            'pnotify' => true,
+            'pnotify_type' => 'Success',
+            'pnotify_text' => 'Success read your document',
+            'reloadDataTabless' => true,
+            'render' => true,
+            'render_type' => 'html',
+            'render_target' => '#responseImport',
+            'render_content' => base64_encode($render)
+        ];
+    }
+
+    private function get_import_id($arr){
+        $website_id = MasterWebsite::where('code', strtoupper($arr['website_code']))->first();
+        if (!empty($website_id)) {
+            $website_id = $website_id->id;
+        }else{
+            return ['status' => false, 'msg' => 'Cannt find website code'];
+        }
+        $bank_id = MasterBank::where('code', $arr['bank_code'])->first();
+        if (!empty($bank_id)) {
+            $bank_id = $bank_id->id;
+        }else{
+            return ['status' => false, 'msg' => 'Cannt find bank code'];
+        }
+        $tier_id = MasterTier::where('name', $arr['tier'])->first();
+        if (!empty($tier_id)) {
+            $tier_id = $tier_id->id;
+        }else{
+            return ['status' => false, 'msg' => 'Cannt find tier'];
+        }
+
+        $message = [];
+        $validator = Validator::make($arr, [
+            'username' => 'required|max:175|min:5|unique:customer,username',
+            'name' => 'required|max:175|min:3',
+            'alamat' => 'required|max:375|min:15',
+            'no_hp' => 'required|numeric',
+            'no_rekening' => 'required|numeric',
+            'atas_nama_rekening' => 'required|max:175|min:5'
+        ], $message);
+        if ($validator->fails()) {
+            $msg = '';
+            $err = $validator->getMessageBag()->toArray();
+            foreach ($err as $key => $value) {
+                $msg .= $value[0].', ';
+            }
+            $msg = substr($msg, 0, -2);
+            return [
+                "status" => false,
+                "msg" => $msg
+            ];
+        }
+
+        return ['status' => true, 'website_id' => $website_id, 'bank_id' => $bank_id, 'tier_id' => $tier_id];
     }
 }

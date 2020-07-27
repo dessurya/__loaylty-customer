@@ -99,6 +99,14 @@
 				if (data.validatorError === true) { validatorError(data); }
 				if (data.reloadDataTabless === true) { reloadDataTabless(); }
 				if (data.reCallForm === true) { reCallForm(data.form_route,data.form_id); }
+				if (data.render === true) { render({"type":data.render_type,"target":data.render_target,"content":data.render_content}); }
+			}
+
+			function render(data) {
+				var render_content = atob(data.content);
+				if (data.type == 'html') {
+					$(data.target).html(render_content);
+				}
 			}
 		</script>
 		@yield('script')

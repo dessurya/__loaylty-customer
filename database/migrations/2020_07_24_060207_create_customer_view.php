@@ -24,11 +24,9 @@ class CreateCustomerView extends Migration
                     no_rekening,
                     atas_nama_rekening,
                     mw.code as website_code,
-                    mw.name as website_name,
-                    concat(mw.code, ' ', mw.name) as website,
+                    mw.name as website,
                     mb.code as bank_code,
-                    mb.name as bank_name,
-                    concat(mb.code, ' ', mb.name) as bank,
+                    mb.name as bank,
                     mt.name as tier,
                     cstmr.created_at as created_at
                 FROM customer cstmr

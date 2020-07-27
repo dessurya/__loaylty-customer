@@ -145,6 +145,7 @@ class SeederConfig extends Seeder
     				"form_target" : "#Customer",
     				"form_readonly" : ["code"],
     				"form_required" : ["username","name","alamat","no_hp","no_rekening","atas_nama_rekening","website_id","bank_id","tier_id"],
+    				"import_header_validat" : ["username","name","alamat","no_hp","no_rekening","atas_nama_rekening","website_code","bank_code","tier"],
     				"pass_param" : {
 	    				"page_title" : "Customer Management",
 	    				"form_location" : "pages.customer_form",

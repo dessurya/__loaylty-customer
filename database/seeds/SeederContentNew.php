@@ -28,9 +28,10 @@ class SeederContentNew extends Seeder
     	}
 
         $datas = [
-            [ "code" => "qwe", "name" => "qwertyuiop"],
-            [ "code" => "asd", "name" => "asdfghjkl"],
-            [ "code" => "zxc", "name" => "zxcvbnm"]
+            [ "code" => "shp", "name" => "shopee"],
+            [ "code" => "tkp", "name" => "tokopedia"],
+            [ "code" => "bkp", "name" => "bukalapak"],
+            [ "code" => "olx", "name" => "olx"]
         ];
         foreach ($datas as $data) {
             $store = MasterWebsite::create($data);
@@ -92,11 +93,6 @@ class SeederContentNew extends Seeder
         ];
         foreach ($datas as $data) {
             $store = Customer::create($data);
-        }
-        $loop = Customer::get();
-        foreach ($loop as $data) {
-            $data->code = $data->code.$data->id;
-            $data->save();
-        }
+        }        
     }
 }
