@@ -40,7 +40,11 @@ class CustomerController extends Controller
 		$Config = $this->getConfig();
 		$Model = "App\Models\\".$Config['table_models'];
 		$data = $Model::get();
-		return DataTables::of($data)->escapeColumns(['*'])->make(true);
+		return DataTables::of($data)->editColumn('icon', function ($data){
+            if (!empty($data->icon)) {
+                return '<img class="icon" src="'.asset($data->icon).'" >';
+            }
+        })->escapeColumns(['*'])->make(true);
     }
 
     public function form(Request $Request){
@@ -128,6 +132,12 @@ class CustomerController extends Controller
 
     public function import(Request $Request){
         $Config = $this->getConfig();
+        if (!file_exists('file/')){
+            mkdir('file/', 0777);
+        }
+        if (!file_exists('file/import')){
+            mkdir('file/import', 0777);
+        }
         $file         = Carbon::now()->format('Ymd_h_i_s').'_'.Str::random(4);
         $file_dir     = 'assets/file/import/'.$file.'_import.xlsx';
         try {

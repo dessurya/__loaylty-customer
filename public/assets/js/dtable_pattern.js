@@ -124,6 +124,8 @@ function reloadDataTabless() {
 }
 
 function formPrepare(data) {
+	$('#iconUrl').hide();
+	$('#iconUrl a').html('');
 	$(data.target).find('button').removeAttr('disabled');
 	$(data.target).find('.input').val(null).removeAttr('required').removeAttr('readonly');
 	$.each(data.required, function(key,target){

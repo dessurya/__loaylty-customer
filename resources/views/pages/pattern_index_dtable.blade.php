@@ -22,6 +22,43 @@ $( document ).ready(function() {
 	sessionStorage.setItem("confDtTable", JSON.stringify(confDtTable));
 	callDataTabless(confDtTable);
 });
+@if(Route::is('master.tier*'))
+$(document).on('click', 'button#trigerSelectIconFile', function() {
+	$(this).val(null);
+	$('input[name=icon]').val(null);
+	$('small#iconUrl').hide();
+	$('small#iconUrl a').html('');
+	$('small#iconUrl a').attr('href','');
+	$('input[type=file]').focus().trigger('click'); 
+	return false;
+});
+$(document).on('change', 'input[type=file]', function(e){
+	if ($(this).val() !== null) {
+		var thisFile = e.target.files[0];
+		if (Math.round((thisFile.size / 1024)) > 4096) {
+			pnotify({"title":"info","type":"error","text":"File too Big, please select a file less than 4mb"});
+		}
+		var type = thisFile.type;
+		var type_reg = /^image\/(png)$/;
+		if (type_reg.test(type) === false){
+			pnotify({"title":"info","type":"error","text":"not allow format"});
+		}
+		var url = URL.createObjectURL(thisFile);
+		$('small#iconUrl').show();
+		$('small#iconUrl a').html(url);
+		$('small#iconUrl a').attr('href',url);
+		var reader = new FileReader();
+		reader.readAsDataURL(thisFile);
+		reader.onloadend = function () {
+			var b64 = reader.result.replace(/^data:.+;base64,/, '');
+		    fileBase64(b64);
+		};
+	}
+});
+function fileBase64(b64) {
+	$('input[name=icon]').val(b64);
+}
+@endif
 </script>
 @endsection
 

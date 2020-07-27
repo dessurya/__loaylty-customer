@@ -28,6 +28,7 @@ class CreateCustomerView extends Migration
                     mb.code as bank_code,
                     mb.name as bank,
                     mt.name as tier,
+                    icon,
                     cstmr.created_at as created_at
                 FROM customer cstmr
                 LEFT JOIN master_website mw on cstmr.website_id = mw.id

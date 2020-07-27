@@ -20,6 +20,26 @@
 			table.dtables tbody tr.selected{
 				background-color: #aab7d1;
 			}
+			table .icon{
+				height: 20px;
+			}
+
+			/* loading page */
+		        #loading-page{
+		            position: fixed;
+		            top: 0;
+		            z-index: 99999;
+		            width: 100vw;
+		            height: 100vh;
+		            background-color: rgba(112,112,112,.4);
+		            transition: all 1.51s;
+		        }
+		        #loading-page .dis-table .row .cel{
+		            text-align: center;
+		            width: 100%;
+		            height: 100vh;
+		        }
+		    /* loading page */
 		</style>
 		@yield('link')
 	</head>
@@ -34,11 +54,23 @@
 
 			@include('_layouts.footer')
 		</div>
+		<div id="loading-page">
+            <div class="dis-table">
+                <div class="row">
+                    <div class="cel">
+                        <img src="{{ asset('images/loading_1.gif') }}">
+                    </div>
+                </div>
+            </div>
+        </div>
 		<script type="text/javascript" src="{{ asset('vendors/jquery/jquery.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/adminlte-dist/js/adminlte.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/pnotify/pnotify.custom.min.js') }}"></script>
 		<script type="text/javascript">
+			$( document ).ready(function() {
+				$('#loading-page').hide();
+			});
 			$.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 			function pnotify(data) {
 				new PNotify({
@@ -84,17 +116,17 @@
 					dataType: 'json',
 					data: data,
 					beforeSend: function() {
-						// $('#loading-page').show();
+						$('#loading-page').show();
 					},
 					success: function(data) {
 						responsePostData(data);
-						// $('#loading-page').hide();
+						$('#loading-page').hide();
 					}
 				});
 			}
 
 			function responsePostData(data) {
-				if (data.pnotify === true) { pnotify({"title":"info","type":data.pnotify_type,"text":data.pnotify_text}); ; }
+				if (data.pnotify === true) { pnotify({"title":"info","type":data.pnotify_type,"text":data.pnotify_text}); }
 				if (data.formPrepare === true) { formPrepare(data); }
 				if (data.validatorError === true) { validatorError(data); }
 				if (data.reloadDataTabless === true) { reloadDataTabless(); }

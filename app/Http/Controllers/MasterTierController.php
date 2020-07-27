@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Config;
+use Carbon\Carbon;
 use DataTables;
 use Validator;
 
@@ -29,7 +31,11 @@ class MasterTierController extends Controller
 		$Config = $this->getConfig();
 		$Model = "App\Models\\".$Config['table_models'];
 		$data = $Model::get();
-		return DataTables::of($data)->escapeColumns(['*'])->make(true);
+		return DataTables::of($data)->editColumn('icon', function ($data){
+            if (!empty($data->icon)) {
+                return '<img class="icon" src="'.asset($data->icon).'" >';
+            }
+        })->escapeColumns(['*'])->make(true);
     }
 
     public function form(Request $Request){
@@ -65,16 +71,38 @@ class MasterTierController extends Controller
     			"data" => $validator->getMessageBag()->toArray()
     		];
     	}
+        $imgIcon = null;
+        if (isset($Request->icon) and !empty($Request->icon)){
+            $imgIcon = base64_decode($Request->icon);
+        }
     	$Config = $this->getConfig();
     	$Model = "App\Models\\".$Config['models'];
     	if (isset($Request->id)){
     		$store = $Model::find($Request->id);
-
+            if ($imgIcon !== null and !empty($store->icon)){
+                unlink($store->icon);
+            }
     	}else{
     		$store = new $Model;
     	}
     	$store->name = $Request->name;
-    	$store->icon = $Request->icon;
+        if ($imgIcon !== null) {
+            if (!file_exists('images/')){
+                mkdir('images/', 0777);
+            }
+            if (!file_exists('images/icon')){
+                mkdir('images/icon', 0777);
+            }
+            $file_name = Str::slug($Request->name, '-').'_'.Carbon::now()->format('Ymd_h_i_s').'_'.Str::random(4);
+            $file_dir     = 'images/icon/'.$file_name.'.png';
+            try {
+                file_put_contents($file_dir, $imgIcon);
+                $response = true;
+            } catch (Exception $e) {
+                $response = $e->getMessage();
+            }
+        	$store->icon = $file_dir;
+        }
     	$store->save();
     	return [
     		'pnotify' => true,

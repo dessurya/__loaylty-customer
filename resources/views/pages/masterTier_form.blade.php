@@ -15,7 +15,14 @@
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>Icon</label>
-						<input readonly name="icon" type="text" class="form-control input">
+						<div class="btn-group btn-block">
+							<button id="trigerSelectIconFile" type="button" class="btn btn-outline-info" href="#" target="_blank" alt="Upload Tier Icon" title="Upload Tier Icon"><i class="fas fa-file-upload"></i>&nbsp;Upload Tier Icon</button>
+							<input type="file" class="input" accept=".png" style="display: none;" >
+							<input name="icon" class="input" type="text" style="display: none;" >
+						</div>
+						<small id="iconUrl" class="form-text text-muted" style="display: none;">
+							<a target="_blank" href=""></a>
+						</small>
 					</div>
 				</div>
 			</div>
