@@ -1,8 +1,8 @@
 <div class="text-left">
 	<div id="dTableAction" class="btn-group">
-		<button id="refreshTable" type="button" class="btn btn-outline-info"><i class="fas fa-sync-alt"></i>&nbsp;Refresh Table</button>
-		<button type="button" class="btn btn-outline-info dropdown-toggle dropdown-icon" data-toggle="dropdown">
-			<i class="fas fa-tools"></i>&nbsp;Action Tools&nbsp;
+		<button id="refreshTable" alt="Refresh Table" title="Refresh Table" type="button" class="btn btn-outline-info"><i class="fas fa-sync-alt"></i></button>
+		<button type="button" alt="Action Tools" title="Action Tools" class="btn btn-outline-info dropdown-toggle dropdown-icon" data-toggle="dropdown">
+			<i class="fas fa-tools"></i>&nbsp;
 			<span class="sr-only">Toggle Dropdown</span>
 		</button>
 		<div class="dropdown-menu" role="menu">
