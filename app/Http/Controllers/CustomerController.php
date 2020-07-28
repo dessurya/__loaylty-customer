@@ -98,11 +98,11 @@ class CustomerController extends Controller
     	}
     	$Config = $this->getConfig();
     	$Model = "App\Models\\".$Config['models'];
-        $checkParam = ['model'=>$Model,'id'=>null,'wid'=>$Request->website_id,'bid'=>$Request->bank_id,'tid'=>$Request->tier_id];
+        $checkParam = ['model'=>$Model,'id'=>null,'wid'=>$Request->website_id,'no_hp'=>$Request->no_hp,'no_rekening'=>$Request->no_rekening];
         if (isset($Request->id)){
             $checkParam['id'] = $Request->id;
         }
-        $checkIfExist = $this->checkIfExist();
+        $checkIfExist = $this->checkIfExist($checkParam);
         if ($checkIfExist === false) {
             return [
                 'pnotify' => true,
@@ -262,8 +262,8 @@ class CustomerController extends Controller
             ];
         }
 
-        $checkParam = ['model'=>$Model,'id'=>null,'wid'=>$website_id,'bid'=>$bank_id,'tid'=>$tier_id];
-        $checkIfExist = $this->checkIfExist();
+        $checkParam = ['model'=>$Model,'id'=>null,'wid'=>$website_id,'no_hp'=>$arr['no_hp'],'no_rekening'=>$arr['no_rekening']];
+        $checkIfExist = $this->checkIfExist($checkParam);
         if ($checkIfExist === false) {
             return ['status' => false, 'msg' => 'This data already exists'];
         }
@@ -274,8 +274,8 @@ class CustomerController extends Controller
     private function checkIfExist($data){
         $check = $data['model']::where([
             'website_id' => $data['wid'],
-            'bank_id' => $data['bid'],
-            'tier_id' => $data['tid']
+            'no_hp' => $data['no_hp'],
+            'no_rekening' => $data['no_rekening']
         ]);
         if (!empty($data['id'])) {
             $check->whereNotIn('id',[$data['id']]);

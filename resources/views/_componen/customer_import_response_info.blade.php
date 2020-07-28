@@ -23,8 +23,7 @@
 										<th>Name</th>
 										<th>No Hp</th>
 										<th>Website</th>
-										<th>Bank</th>
-										<th>Tier</th>
+										<th>No Rekening</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -34,8 +33,7 @@
 										<td>{{ $list['name'] }}</td>
 										<td>{{ $list['no_hp'] }}</td>
 										<td>{{ $list['website_code'] }}</td>
-										<td>{{ $list['bank_code'] }}</td>
-										<td>{{ $list['tier'] }}</td>
+										<td>{{ $list['no_rekening'] }}</td>
 									</tr>
 									@endforeach
 								</tbody>
@@ -51,8 +49,7 @@
 										<th>Name</th>
 										<th>No Hp</th>
 										<th>Website</th>
-										<th>Bank</th>
-										<th>Tier</th>
+										<th>No Rekening</th>
 										<th>Info</th>
 									</tr>
 								</thead>
@@ -63,8 +60,7 @@
 										<td>{{ $list['name'] }}</td>
 										<td>{{ $list['no_hp'] }}</td>
 										<td>{{ $list['website_code'] }}</td>
-										<td>{{ $list['bank_code'] }}</td>
-										<td>{{ $list['tier'] }}</td>
+										<td>{{ $list['no_rekening'] }}</td>
 										<td>{{ $list['msg'] }}</td>
 									</tr>
 									@endforeach
