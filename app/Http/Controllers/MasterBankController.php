@@ -49,16 +49,17 @@ class MasterBankController extends Controller
     }
 
     public function store(Request $Request){
+        // return $Request;
     	$message = [];
     	if (isset($Request->id)) {
     		$validator = Validator::make($Request->all(), [
 				'name' => 'required|max:175',
-				'code' => 'required|size:3|numeric|unique:master_website,code,'.$Request->id
+				'code' => 'required|digits:3|numeric|unique:master_website,code,'.$Request->id
 			], $message);
     	}else{
     		$validator = Validator::make($Request->all(), [
 				'name' => 'required|max:175|min:3',
-				'code' => 'required|size:3|numeric|unique:master_website,code'
+				'code' => 'required|digits:3|numeric|unique:master_website,code'
 			], $message);
     	}
     	if ($validator->fails()) {
