@@ -28,10 +28,11 @@ class SeederContentNew extends Seeder
     	}
 
         $datas = [
-            [ "code" => "shp", "name" => "shopee"],
-            [ "code" => "tkp", "name" => "tokopedia"],
-            [ "code" => "bkp", "name" => "bukalapak"],
-            [ "code" => "olx", "name" => "olx"]
+            [ "code" => "agl", "name" => "Agen Live"],
+            [ "code" => "agd", "name" => "Agenlive 4D"],
+            [ "code" => "ags", "name" => "Agen Sport"],
+            [ "code" => "kcb", "name" => "Krucibet"],
+            [ "code" => "krd", "name" => "Krucil4D"]
         ];
         foreach ($datas as $data) {
             $store = MasterWebsite::create($data);
@@ -47,10 +48,11 @@ class SeederContentNew extends Seeder
         }
 
         $datas = [
-            [ "name" => "Tier01"],
-            [ "name" => "Tier02"],
-            [ "name" => "Tier03"],
-            [ "name" => "Tier04"]
+            [ "name" => "Platinum"],
+            [ "name" => "Gold"],
+            [ "name" => "Silver"],
+            [ "name" => "Iron"],
+            [ "name" => "Bronze"]
         ];
         foreach ($datas as $data) {
             $store = MasterTier::create($data);
