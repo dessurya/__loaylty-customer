@@ -12,6 +12,8 @@ class SeederConfig extends Seeder
      */
     public function run()
     {
+        // Config::truncate();
+
     	$datas = [
     		[
     			"key" => "User",

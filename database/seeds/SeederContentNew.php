@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\MasterWebsite;
@@ -16,6 +17,14 @@ class SeederContentNew extends Seeder
      */
     public function run()
     {
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // User::truncate();
+        // Customer::truncate();
+        // MasterWebsite::truncate();
+        // MasterBank::truncate();
+        // MasterTier::truncate();
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
     	$datas = [
     		[ "name" => "admin001", "email" => "admin001@mail.com", "password" => "asdasd" ],
     		[ "name" => "admin002", "email" => "admin002@mail.com", "password" => "admin002" ],
