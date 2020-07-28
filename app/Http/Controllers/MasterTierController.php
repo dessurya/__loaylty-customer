@@ -114,4 +114,23 @@ class MasterTierController extends Controller
     		'form_id' => $store->id
     	];
     }
+
+    public function delete(Request $Request){
+        $ids = explode('^', $Request->id);
+        $Config = $this->getConfig();
+        $Model = "App\Models\\".$Config['models'];
+        $data = $Model::whereIn('id', $ids)->get();
+        foreach ($data as $item) {
+            if (!empty($item->icon)) {
+                unlink($item->icon);
+            }
+            $item->delete();
+        }
+        return [
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success Delete Data Tier',
+            'reloadDataTabless' => true
+        ];
+    }
 }

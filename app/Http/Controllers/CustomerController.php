@@ -41,9 +41,9 @@ class CustomerController extends Controller
 		$Model = "App\Models\\".$Config['table_models'];
 		$data = $Model::get();
 		return DataTables::of($data)->editColumn('icon', function ($data){
-            if (!empty($data->icon)) {
-                return '<img class="icon" src="'.asset($data->icon).'" >';
-            }
+            // if (!empty($data->icon)) {
+            //     return '<img class="icon" src="'.asset($data->icon).'" >';
+            // }
         })->escapeColumns(['*'])->make(true);
     }
 
@@ -98,6 +98,18 @@ class CustomerController extends Controller
     	}
     	$Config = $this->getConfig();
     	$Model = "App\Models\\".$Config['models'];
+        $checkParam = ['model'=>$Model,'id'=>null,'wid'=>$Request->website_id,'bid'=>$Request->bank_id,'tid'=>$Request->tier_id];
+        if (isset($Request->id)){
+            $checkParam['id'] = $Request->id;
+        }
+        $checkIfExist = $this->checkIfExist();
+        if ($checkIfExist === false) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Sorry, this data already exists'
+            ];
+        }
     	$store = $this->storeExecute($Model, $Request);
     	return [
     		'pnotify' => true,
@@ -182,7 +194,7 @@ class CustomerController extends Controller
         }
         $Model = "App\Models\\".$Config['models'];
         foreach ($write_arr as $arr) {
-            $get_import_id = $this->get_import_id($arr);
+            $get_import_id = $this->get_import_id($arr,$Model);
             if ($get_import_id['status'] == true) {
                 $arr['website_id'] = $get_import_id['website_id'];
                 $arr['bank_id'] = $get_import_id['bank_id'];
@@ -208,7 +220,7 @@ class CustomerController extends Controller
         ];
     }
 
-    private function get_import_id($arr){
+    private function get_import_id($arr,$Model){
         $website_id = MasterWebsite::where('code', strtoupper($arr['website_code']))->first();
         if (!empty($website_id)) {
             $website_id = $website_id->id;
@@ -250,6 +262,42 @@ class CustomerController extends Controller
             ];
         }
 
+        $checkParam = ['model'=>$Model,'id'=>null,'wid'=>$website_id,'bid'=>$bank_id,'tid'=>$tier_id];
+        $checkIfExist = $this->checkIfExist();
+        if ($checkIfExist === false) {
+            return ['status' => false, 'msg' => 'This data already exists'];
+        }
+
         return ['status' => true, 'website_id' => $website_id, 'bank_id' => $bank_id, 'tier_id' => $tier_id];
+    }
+
+    private function checkIfExist($data){
+        $check = $data['model']::where([
+            'website_id' => $data['wid'],
+            'bank_id' => $data['bid'],
+            'tier_id' => $data['tid']
+        ]);
+        if (!empty($data['id'])) {
+            $check->whereNotIn('id',[$data['id']]);
+        }
+        $check = $check->count();
+        if ($check != 0) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public function delete(Request $Request){
+        $ids = explode('^', $Request->id);
+        $Config = $this->getConfig();
+        $Model = "App\Models\\".$Config['models'];
+        $data = $Model::whereIn('id', $ids)->delete();
+        return [
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success Delete Data Customer',
+            'reloadDataTabless' => true
+        ];
     }
 }

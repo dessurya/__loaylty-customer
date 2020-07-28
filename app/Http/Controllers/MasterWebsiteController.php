@@ -89,4 +89,17 @@ class MasterWebsiteController extends Controller
     		'form_id' => $store->id
     	];
     }
+
+    public function delete(Request $Request){
+        $ids = explode('^', $Request->id);
+        $Config = $this->getConfig();
+        $Model = "App\Models\\".$Config['models'];
+        $data = $Model::whereIn('id', $ids)->delete();
+        return [
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success Delete Data Website',
+            'reloadDataTabless' => true
+        ];
+    }
 }

@@ -23,8 +23,11 @@ class CreateCustomerTable extends Migration
             $table->string('no_rekening');
             $table->string('atas_nama_rekening');
             $table->bigInteger('website_id')->nullable()->unsigned();
+            $table->string('website')->nullable();
             $table->bigInteger('bank_id')->nullable()->unsigned();
+            $table->string('bank')->nullable();
             $table->bigInteger('tier_id')->nullable()->unsigned();
+            $table->string('tier')->nullable();
             $table->timestamps();
         });
 

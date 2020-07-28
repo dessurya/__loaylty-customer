@@ -70,7 +70,8 @@ class SeederConfig extends Seeder
 	    				],
 	    				"button_action" : [
 	    					{"route" : "master.website.form", "title" : "Add Master Website", "action" : "add", "select" : "false", "confirm" : "false", "multiple" : "false", "icon" : "plus-square"},
-	    					{"route" : "master.website.form", "title" : "View/Update Master Website", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"}
+	    					{"route" : "master.website.form", "title" : "View/Update Master Website", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"},
+	    					{"route" : "master.website.delete", "title" : "Delete Master Website", "action" : "delete", "select" : "true", "confirm" : "true", "multiple" : "true", "icon" : "trash"}
 	    				]
     				}
     			}'
@@ -100,7 +101,8 @@ class SeederConfig extends Seeder
 	    				],
 	    				"button_action" : [
 	    					{"route" : "master.bank.form", "title" : "Add Master Bank", "action" : "add", "select" : "false", "confirm" : "false", "multiple" : "false", "icon" : "plus-square"},
-	    					{"route" : "master.bank.form", "title" : "View/Update Master Bank", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"}
+	    					{"route" : "master.bank.form", "title" : "View/Update Master Bank", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"},
+	    					{"route" : "master.bank.delete", "title" : "Delete Master Bank", "action" : "delete", "select" : "true", "confirm" : "true", "multiple" : "true", "icon" : "trash"}
 	    				]
     				}
     			}'
@@ -130,7 +132,8 @@ class SeederConfig extends Seeder
 	    				],
 	    				"button_action" : [
 	    					{"route" : "master.tier.form", "title" : "Add Master Tier", "action" : "add", "select" : "false", "confirm" : "false", "multiple" : "false", "icon" : "plus-square"},
-	    					{"route" : "master.tier.form", "title" : "View/Update Master Tier", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"}
+	    					{"route" : "master.tier.form", "title" : "View/Update Master Tier", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"},
+	    					{"route" : "master.tier.delete", "title" : "Delete Master Tier", "action" : "delete", "select" : "true", "confirm" : "true", "multiple" : "true", "icon" : "trash"}
 	    				]
     				}
     			}'
@@ -140,7 +143,7 @@ class SeederConfig extends Seeder
     			"config" => '{
     				"page_pattern" : "pages.pattern_customer_index_dtable",
     				"models" : "Customer",
-    				"table_models" : "ViewCustomer",
+    				"table_models" : "Customer",
     				"form_route" : "customer.form",
     				"form_target" : "#Customer",
     				"form_readonly" : ["code"],
@@ -157,7 +160,7 @@ class SeederConfig extends Seeder
 	    				"import_url" : "customer.import",
 	    				"table_url" : "customer.cdt",
 	    				"table_config" : [
-	    					{"data":"customer_code","name":"customer_code","searchable":true,"orderable":true},
+	    					{"data":"code","name":"code","searchable":true,"orderable":true},
 	    					{"data":"username","name":"username","searchable":true,"orderable":true},
 	    					{"data":"name","name":"name","searchable":true,"orderable":true},
 	    					{"data":"alamat","name":"alamat","searchable":true,"orderable":true},
@@ -170,7 +173,8 @@ class SeederConfig extends Seeder
 	    				],
 	    				"button_action" : [
 	    					{"route" : "customer.form", "title" : "Add Customer", "action" : "add", "select" : "false", "confirm" : "false", "multiple" : "false", "icon" : "plus-square"},
-	    					{"route" : "customer.form", "title" : "View/Update Customer", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"}
+	    					{"route" : "customer.form", "title" : "View/Update Customer", "action" : "view", "select" : "true", "confirm" : "false", "multiple" : "false", "icon" : "folder-open"},
+	    					{"route" : "customer.delete", "title" : "Delete Customer", "action" : "delete", "select" : "true", "confirm" : "true", "multiple" : "true", "icon" : "trash"}
 	    				]
     				}
     			}'

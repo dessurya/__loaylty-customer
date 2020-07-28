@@ -22,9 +22,11 @@ Route::post('/login', 'Auth\LoginController@login')->name('login.exe');
 Route::view('/welcome', 'welcome');
 
 Route::middleware('user')->group(function(){
+	
 	Route::get('/dashboard', function(){
 		return view('pages.dashboard');
 	})->name('dashboard');
+
 	Route::get('/self', 'UserController@self')->name('self-data');
 	Route::post('/self', 'UserController@selfStore')->name('self-store');
 
@@ -42,6 +44,7 @@ Route::middleware('user')->group(function(){
 			Route::get('/', 'MasterWebsiteController@index')->name('index');
 			Route::post('/form', 'MasterWebsiteController@form')->name('form');
 			Route::post('/store', 'MasterWebsiteController@store')->name('store');
+			Route::post('/delete', 'MasterWebsiteController@delete')->name('delete');
 			Route::any('/callDtTabls', 'MasterWebsiteController@dataTables')->name('cdt');
 		});
 
@@ -49,6 +52,7 @@ Route::middleware('user')->group(function(){
 			Route::get('/', 'MasterBankController@index')->name('index');
 			Route::post('/form', 'MasterBankController@form')->name('form');
 			Route::post('/store', 'MasterBankController@store')->name('store');
+			Route::post('/delete', 'MasterBankController@delete')->name('delete');
 			Route::any('/callDtTabls', 'MasterBankController@dataTables')->name('cdt');
 		});
 
@@ -56,6 +60,7 @@ Route::middleware('user')->group(function(){
 			Route::get('/', 'MasterTierController@index')->name('index');
 			Route::post('/form', 'MasterTierController@form')->name('form');
 			Route::post('/store', 'MasterTierController@store')->name('store');
+			Route::post('/delete', 'MasterTierController@delete')->name('delete');
 			Route::any('/callDtTabls', 'MasterTierController@dataTables')->name('cdt');
 		});
 	});
@@ -64,6 +69,7 @@ Route::middleware('user')->group(function(){
 		Route::get('/', 'CustomerController@index')->name('index');
 		Route::post('/form', 'CustomerController@form')->name('form');
 		Route::post('/store', 'CustomerController@store')->name('store');
+		Route::post('/delete', 'CustomerController@delete')->name('delete');
 		Route::post('/import', 'CustomerController@import')->name('import');
 		Route::any('/callDtTabls', 'CustomerController@dataTables')->name('cdt');
 	});
